@@ -46,16 +46,16 @@ supermarket({filename: 'oaz.sqlite', json: true}, function(error, db) {
 			var options = {uri: message.match_data[0], method: 'HEAD'}
 		
 			request(options, function(error, response, body) {
+				var url = options.uri.href
+				
 				if (!error) {
-					var url = options.uri.href
+					var entry = {user: message.user, time: (new Date()).toString()}
 
-					// Attempt to update existing link
-					db.get(url, function(error, value) {
-						var link = !error ? value : {entries: []}
-						var entry = {user: message.user, time: (new Date()).toString()}
+					db.get(url, function(error, link) {
+						link = link || {entries: []}
 						link.entries.push(entry)
 					
-						db.set(url, link, function(error, value) {
+						db.set(url, link, function(error) {
 							console.log(error ? 'Failed to store' : 'Successfully stored', url)
 						})
 					
@@ -70,22 +70,19 @@ supermarket({filename: 'oaz.sqlite', json: true}, function(error, db) {
 	
 		bot.watch_for(/^[oO]+[äÄ]+[zZ]+/, function(message) {
 			// Fetch the last link
-			db.get('lastLink', function(error, value) {
-				if (!error) {
-					var url = value
-				
+			db.get('lastLink', function(error, url) {
+				if (url) {
 					// Get the link
-					db.get(url, function(error, value) {
-						if (!error) {
+					db.get(url, function(error, link) {
+						if (link) {
 							// Oäz that shit!
-							var link = value
 							var count = link.entries.length
 							var entry = link.entries[count - 1]
 						
 							if (!entry.processed) {
 								entry.processed = true
 							
-								db.set(url, link, function(error, value) {
+								db.set(url, link, function(error) {
 									console.log(error ? 'Failed to update' : 'Successfully updated', url)
 
 									var age = 'O{0}z!'.format('ä'.repeat(count))
@@ -106,7 +103,6 @@ supermarket({filename: 'oaz.sqlite', json: true}, function(error, db) {
 					console.log('We don\'t have a last link!')
 				}
 			})
-		
 		})
 	
 		// YouTube
