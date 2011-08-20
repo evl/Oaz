@@ -5,22 +5,21 @@ var jerk = require('jerk'),
 	store = require('./lib/store'),
 	utils = require('./lib/utils');
 
-var options;
+var options = {
+	server: 'se.quakenet.org',
+	encoding: 'utf8',
+	log: true,
+	nick: 'Jaysus',
+	channels: ['#jaysus'],
+	user: {
+		username: 'jaysus',
+		realname: '“Oäz unto others as you would have them oäz unto you.”'
+	}
+};
 
 try {
-	options = require('./config');
+	require('./config')(options);
 } catch (e) {
-	options = {
-		server: 'se.quakenet.org',
-		encoding: 'utf8',
-		log: true,
-		nick: 'Jaysus',
-		channels: ['#jaysus'],
-		user: {
-			username: 'jaysus',
-			realname: '“Oäz unto others as you would have them oäz unto you.”'
-		}
-	};
 }
 
 var bold = function(value) {
