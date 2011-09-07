@@ -36,7 +36,7 @@ store('oaz.sqlite3', function(err, db) {
 		bot.watch_for(/http:\/\/\S+/, function(message) {
 			var uri = url.parse(message.match_data[0]);
 			var options = {uri: uri, method: 'HEAD'};
-		
+
 			request(options, function(err, response, body) {
 				var key = uri.href;
 
@@ -46,11 +46,11 @@ store('oaz.sqlite3', function(err, db) {
 					db.get(key, function(err, link) {
 						link = link || {entries: []};
 						link.entries.push(entry);
-					
+
 						db.set(key, link, function(err) {
 							console.log(err ? 'Failed to store' : 'Successfully stored', key);
 						});
-					
+
 						// Store a reference to the last link that was posted
 						db.set('lastLink', key);
 					});
@@ -59,7 +59,7 @@ store('oaz.sqlite3', function(err, db) {
 				}
 			});
 		});
-	
+
 		/*
 		bot.watch_for(/^[oO]+[äÄ]+[zZ]+/, function(message) {
 			// Fetch the last link
@@ -71,16 +71,16 @@ store('oaz.sqlite3', function(err, db) {
 							// Oäz that shit!
 							var count = link.entries.length
 							var entry = link.entries[count - 1]
-						
+
 							if (!entry.processed) {
 								entry.processed = true
-							
+
 								db.set(key, link, function(err) {
 									console.log(err ? 'Failed to update' : 'Successfully updated', key)
 
 									var age = 'O{0}z!'.format('ä'.repeat(count))
 									var result = '{0}: {1}'.format(entry.user, bold(age))
-								
+
 									if (count > 1) {
 										var firstEntry = link.entries[0]
 
@@ -98,7 +98,7 @@ store('oaz.sqlite3', function(err, db) {
 			})
 		})
 		*/
-	
+
 		// YouTube
 		bot.watch_for(/youtube.*v=([^#&\s]+)/, function(message) {
 			var id = message.match_data[1];
@@ -113,7 +113,7 @@ store('oaz.sqlite3', function(err, db) {
 				}
 			});
 		});
-	
+
 		// Vimeo
 		bot.watch_for(/vimeo\.com\/(\d+)/, function(message) {
 			var id = message.match_data[1];
@@ -127,7 +127,7 @@ store('oaz.sqlite3', function(err, db) {
 				}
 			});
 		});
-	
+
 		// Spotify
 		bot.watch_for(/(http:\/\/open\.spotify\.com\/[\w\/]+)/, function(message) {
 			var id = message.match_data[1];
@@ -158,7 +158,25 @@ store('oaz.sqlite3', function(err, db) {
 				}
 			});
 		});
-	
+
+		// WiMP
+		bot.watch_for(/wimp\.no\/(artist|album|track)\/\d+/, function(message) {
+		    var type = matches[1][0].toUpperCase() + matches[1].substr(1);
+    		var options = {uri: 'http://' + matches[0]};
+
+			request(options, function(err, response, body) {
+		        if (response.statusCode == 200) {
+		            var titlePattern = /<title>(.+)\s\-\s/;
+		            var matches = body.match(titlePattern);
+
+		            if (matches) {
+		                var title = matches[1];
+		                message.say('{0}: {1}'.format(bold('Spotify ' + type), title));
+		            }
+		        }
+			});
+		});
+
 		// Weather
 		bot.watch_for(/^!(?:weather|temp|termo|temperature) (.+)/, function(message) {
 			var query = message.match_data[1];
