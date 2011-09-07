@@ -161,8 +161,8 @@ store('oaz.sqlite3', function(err, db) {
 
 		// WiMP
 		bot.watch_for(/wimp\.no\/(artist|album|track)\/\d+/, function(message) {
-		    var type = matches[1][0].toUpperCase() + matches[1].substr(1);
-    		var options = {uri: 'http://' + matches[0]};
+    		var options = {uri: 'http://' + message.match_data[0]};
+		    var type = message.match_data[1];
 
 			request(options, function(err, response, body) {
 		        if (response.statusCode == 200) {
@@ -171,7 +171,7 @@ store('oaz.sqlite3', function(err, db) {
 
 		            if (matches) {
 		                var title = matches[1];
-		                message.say('{0}: {1}'.format(bold('Spotify ' + type), title));
+		                message.say('{0}: {1}'.format(bold('WiMP ' + type.capitalize()), title));
 		            }
 		        }
 			});
