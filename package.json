@@ -1,0 +1,18 @@
+{
+    "name": "oaz",
+    "version": "1.1.0",
+    "description": "The infamous öaz bot",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:evl/oaz.git"
+    },
+    "main": "./lib/oaz",
+    "dependencies": {
+        "irc": "0.2.x",
+        "sqlite3": "2.0.x",
+        "request": "2.1.x"
+    },
+    "bin": {
+        "oaz": "./bin/oaz"
+    }    
+}
