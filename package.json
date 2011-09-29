@@ -8,7 +8,7 @@
     },
     "main": "./lib/oaz",
     "dependencies": {
-        "irc": "0.2.x",
+        "irc": "git://github.com/evl/node-irc.git",
         "sqlite3": "2.0.x",
         "request": "2.1.x"
     },
