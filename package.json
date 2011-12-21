@@ -8,7 +8,7 @@
     },
     "main": "./lib/oaz",
     "dependencies": {
-        "irc": "git://github.com/evl/node-irc.git",
+        "irc": "0.3.x",
         "request": "2.2.x"
     },
     "bin": {
