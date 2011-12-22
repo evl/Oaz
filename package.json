@@ -9,7 +9,8 @@
     "main": "./lib/oaz",
     "dependencies": {
         "irc": "0.3.x",
-        "request": "2.2.x"
+        "request": "2.2.x",
+        "mongoq": "0.2.x"
     },
     "bin": {
         "oaz": "./bin/oaz"
